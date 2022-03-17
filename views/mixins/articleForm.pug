@@ -1,1 +1,18 @@
-+
+mixin articleForm(article,buttonText,saveUrl, cancelUrl, deleteUrl)
+    form(action=saveUrl method='post')
+        div.input-container.wide
+            lable(for='title').form-label Title
+            input(type='text' name='title' id='title' required=true placeholder='My Blog Title' value=article.title)
+        div.input-container.super-wide
+            lable(for='intro').form-label Intro
+            input(type='text' name='intro' id='intro' required=true placeholder='Hook' value=article.intro)
+        div.input-container.super-wide
+            lable(for='image_url').form-label Image Url
+            input(type='text' name='image_url' id='image_url' required=true value=article.image_url)
+        div.input-container
+            lable(for='body').form-label
+            textarea(name='body' id='body' required=true placeholder='Body') #{article.body}
+        a.button(href=cancelUrl) Cancel
+        if(deleteUrl)
+            a.button(href=deleteUrl) Delete
+        button.button.primary(type='submit') #{buttonText}
