@@ -6,7 +6,10 @@ block content
         div.content
             div.article-header-row
                 h1.article-title=article.title
-                a.button(href=`/article/${article.id}/edit`) Edit
+                if user && article.isOwnedBy(user)
+                    a.button(href=`/article/${article.id}/edit`) Edit
+                if user && user.is('admin')
+                    a.button(href=`/article/${article.id}/delete`) Delete
             p.published-on Published
                 strong.emphasize #{article.friendlyPublishedDate}
                 | by
@@ -25,6 +28,9 @@ block content
                         div.input-container.wide
                             textarea(placeholder='comment here' required=true name='body' cols='80' rows='5')
                         div
+                            a.button(href=cancelUrl) Cancel
+                            if(deleteUrl && user && article.isOwnedBy(user))
+                                a.button(href=deleteUrl) Delete
                             button.button.primary(type='submit') Comment
 
                 ul.comment-list

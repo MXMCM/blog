@@ -15,7 +15,7 @@ module.exports.addArticle = async function(req, res){
         intro: req.body.intro,
         image_url: req.body.image_url,
         body: req.body.body,
-        author_id: 1,
+        author_id: req.user.id,
         published_on: new Date()
     })
     res.redirect('/');
@@ -49,9 +49,18 @@ module.exports.displayAll = async function (req,res){
 };
 module.exports.renderEditForm = async function(req,res){
     const article = await Article.findByPk(req.params.articleId);
+    if (!article.isOwnedBy(req.user)){
+        res.redirect('/');
+        return;
+    }
     res.render('articles/edit', {article});
 };
 module.exports.updateArticle = async function(req,res){
+    const article = await Article.findByPk(req.params.articleId);
+    if (!article.isOwnedBy(user)){
+        res.redirect('/');
+        return;
+    }
     await Article.update({
         title: req.body.title,
         intro: req.body.intro,
@@ -65,6 +74,11 @@ module.exports.updateArticle = async function(req,res){
     res.redirect(`/article/${req.params.articleId}`);
 }
 module.exports.deleteAricle = async function(req,res){
+    const article = await Article.findByPk(req.params.articleId);
+    if (!user.is('admin') && !article.isOwnedBy(user)){
+        res.redirect('/');
+        return;
+    }
     await Article.destroy({
         where: {
             id: req.params.articleId
